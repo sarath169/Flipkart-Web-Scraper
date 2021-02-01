@@ -42,4 +42,4 @@ for i in laptops:
     ws.append(i)
 # Python types will automatically be converted
 # Save the file
-wb.save("flipkart_top97_laptops.xlsx")
+wb.save("flipkart_top96_laptops.xlsx")
