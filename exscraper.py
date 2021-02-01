@@ -1,16 +1,16 @@
-from bs4 import BeautifulSoup
 import requests
-from openpyxl import Workbook
 import datetime
+import logging
+from bs4 import BeautifulSoup
+from openpyxl import Workbook
+
+link='https://www.flipkart.com/search?q=laptops&as=on&as-show=on&otracker=AS_Query_HistoryAutoSuggest_1_3_na_na_na&otracker1=AS_Query_HistoryAutoSuggest_1_3_na_na_na&as-pos=1&as-type=HISTORY&suggestionId=laptops&requestId=9fc7ba87-bccb-4aca-a0c3-2984664a6f7a&as-backfill=on&page='
 laptops=[]
 for i in range(1,5):
-    print(i)
-    source = requests.get("https://www.flipkart.com/search?q=laptops&as=on&as-show=on&otracker=AS_Query_HistoryAutoSuggest_1_3_na_na_na&otracker1=AS_Query_HistoryAutoSuggest_1_3_na_na_na&as-pos=1&as-type=HISTORY&suggestionId=laptops&requestId=9fc7ba87-bccb-4aca-a0c3-2984664a6f7a&as-backfill=on&page="+str(i)).text
+    source = requests.get(link+str(i)).text
     soup = BeautifulSoup(source,'lxml')
-    #E2-pcE _1q8tSL
-
     for div in soup.find_all(class_='_1fQZEK'):
-        # print(div1.prettify()
+        # print(div1.prettify())
         name = div.find('div',class_="_4rR01T").text
         if div.find('div',class_='_3LWZlK'):
             ratings=div.find('div',class_='_3LWZlK').text
@@ -22,11 +22,21 @@ for i in range(1,5):
         else:
             actual_price=list_price
         date_time=datetime.datetime.now()
-        print(name,ratings,list_price,actual_price)
+        logging.info(name,ratings,list_price,actual_price)
         laptops.append([name,ratings,list_price,actual_price,date_time])
-    print("------------------------")
+
+log_records=[]
 for i in laptops:
-    print(i)
+    log_records.append(i)
+    logging.info(i)
+wb_log=Workbook()
+ws_log=wb_log.active
+ws_log['A1']='Log_Info'
+for logs in log_records:
+    ws_log.append(logs)
+wb_log.save("Logging Report.xlsx")
+
+
 wb=Workbook()
 # grab the active worksheet
 ws = wb.active
