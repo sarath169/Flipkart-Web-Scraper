@@ -10,7 +10,7 @@ from Constants import *
 
 
 def scraper(link):
-    # 
+    #
     laptops=[]
     log_info=[]
     for i in range(1,5):
